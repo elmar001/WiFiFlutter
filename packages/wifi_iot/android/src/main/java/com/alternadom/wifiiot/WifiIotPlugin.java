@@ -828,12 +828,20 @@ public class WifiIotPlugin
         // the correct network is used for communications, else fallback to network manager network.
         // https://developer.android.com/about/versions/12/behavior-changes-12#concurrent-connections
         if (joinedNetwork != null) {
+                    Log.e(
+            "testFlag",
+            "Condition 1: joinedNetwork != null.");
+            
           success = selectNetwork(joinedNetwork, manager);
         } else {
+                        Log.e(
+            "testFlag",
+            "Condition 2: joinedNetwork == null.");
           NetworkRequest.Builder builder;
           builder = new NetworkRequest.Builder();
           /// set the transport type do WIFI
           builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI);
+         
           shouldReply = false;
           manager.requestNetwork(
               builder.build(),
@@ -845,6 +853,12 @@ public class WifiIotPlugin
                   onAvailableNetwork(manager, network, poResult);
                 }
               });
+            
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      manager.bindProcessToNetwork(joinedNetwork);
+    } else {
+      ConnectivityManager.setProcessDefaultNetwork(joinedNetwork);
+    }
         }
       } else {
         success = selectNetwork(null, manager);
