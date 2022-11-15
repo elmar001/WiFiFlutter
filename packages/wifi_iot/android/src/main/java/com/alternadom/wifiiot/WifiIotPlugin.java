@@ -834,7 +834,10 @@ public class WifiIotPlugin
           builder = new NetworkRequest.Builder();
           /// set the transport type do WIFI
           builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI);
-          shouldReply = false;
+
+         
+          builder.addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
+//           shouldReply = false;
           manager.requestNetwork(
               builder.build(),
               new ConnectivityManager.NetworkCallback() {
@@ -843,6 +846,7 @@ public class WifiIotPlugin
                   super.onAvailable(network);
                   manager.unregisterNetworkCallback(this);
                   onAvailableNetwork(manager, network, poResult);
+                    selectNetwork(joinedNetwork, manager);
                 }
               });
         }
